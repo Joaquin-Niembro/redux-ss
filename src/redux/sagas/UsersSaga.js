@@ -1,27 +1,24 @@
-import { takeEvery, call, put, take,  } from 'redux-saga/effects';
+import { call, take, takeEvery, put, fork } from 'redux-saga/effects';
+import { GET_USERS, CREATE_USER, DELETE_USER } from '../actions/types';
 import {
 	getUsersSuccess,
 	getUsersFailure,
-	createUserFailure,
 	createUserSuccess,
-	GET_USERS,
-	CREATE_USER,
-	DELETE_USER,
-	deleteUserFailure,
+	createUserFailure,
 	deleteUserSuccess,
+	deleteUserFailure,
 } from '../actions/usersActions';
 import {
-	usersFetch,
+	getUsersFetch,
 	createUserFetch,
 	deleteUserFetch,
-} from '../api/usersRequests';
-
+} from '../api/usersApi';
 function* getUsersWorker() {
 	try {
-		const res = yield call(usersFetch);
+		const res = yield call(getUsersFetch);
 		yield put(getUsersSuccess(res.data.data));
 	} catch (error) {
-		yield put(getUsersFailure(error));
+		yield put(getUsersFailure(error.message));
 	}
 }
 function* createUserWorker({ payload }) {
@@ -29,7 +26,7 @@ function* createUserWorker({ payload }) {
 		const res = yield call(createUserFetch, payload);
 		yield put(createUserSuccess(res.data));
 	} catch (error) {
-		yield put(createUserFailure(error));
+		yield put(createUserFailure(error.message));
 	}
 }
 function* deleteUserWorker({ payload }) {
@@ -37,12 +34,19 @@ function* deleteUserWorker({ payload }) {
 		yield call(deleteUserFetch, payload);
 		yield put(deleteUserSuccess(payload));
 	} catch (error) {
-		yield put(deleteUserFailure(error));
+		yield put(deleteUserFailure(error.message));
 	}
 }
 export default function* usersWatcher() {
-	yield take(GET_USERS);
-	yield call(getUsersWorker);
+	/*yield takeEvery(GET_USERS, getUsersWorker);
 	yield takeEvery(CREATE_USER, createUserWorker);
-	yield takeEvery(DELETE_USER, deleteUserWorker);
+	yield takeEvery(DELETE_USER, deleteUserWorker);*/
+	while (true) {
+		yield take(GET_USERS);
+		yield call(getUsersWorker);
+		const createUserAction = yield take(CREATE_USER);
+		yield call(createUserWorker, createUserAction);
+		const deleteUserAction = yield take(DELETE_USER);
+		yield call(deleteUserWorker, deleteUserAction);
+	}
 }

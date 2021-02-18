@@ -8,13 +8,13 @@ import {
 	DELETE_USER,
 	DELETE_USER_FAILURE,
 	DELETE_USER_SUCCESS,
-} from '../actions/types';
+} from '../actions/usersActions';
 export default function UsersReducer(state = [], action) {
 	switch (action.type) {
 		case GET_USERS:
 			return state;
 		case GET_USERS_SUCCESS:
-			return action.payload
+			return action.payload;
 		case GET_USERS_FAILURE:
 			return [];
 		case CREATE_USER:

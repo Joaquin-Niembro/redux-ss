@@ -1,14 +1,7 @@
-import {
-	CREATE_USER,
-	CREATE_USER_FAILURE,
-	CREATE_USER_SUCCESS,
-	DELETE_USER,
-	DELETE_USER_FAILURE,
-	DELETE_USER_SUCCESS,
-	GET_USERS,
-	GET_USERS_FAILURE,
-	GET_USERS_SUCCESS,
-} from './types';
+export const GET_USERS = 'GET_USERS';
+export const GET_USERS_SUCCESS = 'GET_USERS_SUCCESS';
+export const GET_USERS_FAILURE = 'GET_USERS_FAILURE';
+
 function getUsers() {
 	return { type: GET_USERS };
 }
@@ -25,6 +18,10 @@ function getUsersFailure(message) {
 		payload: message,
 	};
 }
+////////////////////////////////////
+export const CREATE_USER = 'CREATE_USER';
+export const CREATE_USER_SUCCESS = 'CREATE_USER_SUCCESS';
+export const CREATE_USER_FAILURE = 'CREATE_USER_FAILURE';
 
 function createUser(newUser) {
 	return {
@@ -44,7 +41,10 @@ function createUserFailure(message) {
 		payload: message,
 	};
 }
-
+////////////////////////
+export const DELETE_USER = 'DELETE_USER';
+export const DELETE_USER_SUCCESS = 'DELETE_USER_SUCCESS';
+export const DELETE_USER_FAILURE = 'DELETE_USER_FAILURE';
 const deleteUser = (id) => {
 	return {
 		type: DELETE_USER,
@@ -63,15 +63,14 @@ const deleteUserFailure = (error) => {
 		payload: error,
 	};
 };
-
 export {
+	getUsers,
+	getUsersFailure,
+	getUsersSuccess,
 	createUser,
 	createUserFailure,
 	createUserSuccess,
 	deleteUser,
 	deleteUserFailure,
 	deleteUserSuccess,
-	getUsers,
-	getUsersFailure,
-	getUsersSuccess,
 };

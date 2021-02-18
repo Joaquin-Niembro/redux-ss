@@ -1,33 +1,37 @@
 import './App.css';
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import { usersFetch } from './redux2/actions/usersActions';
-function App({ Users, usersFetch }) {
+import { getUsers, createUser, deleteUser } from './redux/actions/usersActions';
+function App({ Users = [], getUsers, createUser, deleteUser }) {
 	const [newUser, setNewUser] = useState({
 		name: '',
 		job: '',
 	});
-	console.log(Users);
+
 	return (
 		<div className='App'>
-			<button onClick={usersFetch}>getUsers</button>
+			<button onClick={getUsers}>getUsers</button>
 			<ul>
-				{Users && Users.map((user) => (
-					<div
-						key={user.id}
-						style={{
-							display: 'flex',
-							margin: 'auto',
-							justifyContent: 'space-around',
-							alignItems: 'center',
-						}}
-					>
-						<li>{user.first_name ? user.first_name : user.name}</li>
-						<button style={{ backgroundColor: 'red' }} onClick={() => {}}>
-							Delete
-						</button>
-					</div>
-				))}
+				{Users &&
+					Users.map((user) => (
+						<div
+							key={user.id}
+							style={{
+								display: 'flex',
+								margin: 'auto',
+								justifyContent: 'space-around',
+								alignItems: 'center',
+							}}
+						>
+							<li>{user.first_name ? user.first_name : user.name}</li>
+							<button
+								style={{ backgroundColor: 'red' }}
+								onClick={() => deleteUser(user.id)}
+							>
+								Delete
+							</button>
+						</div>
+					))}
 			</ul>
 			<input
 				type='text'
@@ -39,20 +43,23 @@ function App({ Users, usersFetch }) {
 				value={newUser.job}
 				onChange={(e) => setNewUser({ ...newUser, job: e.target.value })}
 			/>
-			<button onClick={() => {}}>createUser</button>
+			<button onClick={() => createUser(newUser)}>createUser</button>
 		</div>
 	);
 }
-const usersSelector = (state) => state.Users.users;
+const usersSelector = (state) => state.Users;
 const mapStateToProps = (state) => {
 	return {
 		Users: usersSelector(state),
 	};
 };
 const mapDispatchToProps = {
-	usersFetch,
+	getUsers,
+	createUser,
+	deleteUser,
 };
 export default connect(mapStateToProps, mapDispatchToProps)(App);
+
 //High Order Component - HOC
 /* function HOC(Component){
 	return (
